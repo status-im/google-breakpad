@@ -1,0 +1,21 @@
+{
+  "private": true,
+  "nativePackage": true,
+  "name": "google-breakpad",
+  "version": "1.0.0",
+  "description": "Google breakpad library",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/status-im/google-breakpad.git"
+  },
+  "author": "",
+  "license": "",
+  "bugs": {
+    "url": "https://github.com/status-im/google-breakpad/issues"
+  },
+  "homepage": "https://github.com/status-im/google-breakpad#readme"
+}
