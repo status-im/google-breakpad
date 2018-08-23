@@ -7,10 +7,13 @@ namespace google_breakpad {
     class ExceptionHandler;
 }
 
+typedef void (*ExceptionPostHandledCallback)();
+
 class ExceptionGlobalHandler
 {
 public:
-    ExceptionGlobalHandler(const QString& crashReporterPath);
+    ExceptionGlobalHandler(const QString& crashReporterPath,
+                           ExceptionPostHandledCallback postHandledCallback = nullptr);
     ~ExceptionGlobalHandler();
 
 private:

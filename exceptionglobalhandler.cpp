@@ -12,6 +12,7 @@
 #endif
 
 QString g_crashReporterPath;
+ExceptionPostHandledCallback g_exceptionPostHandledCallback = nullptr;
 
 bool handleException(QString path) {
     const QStringList argumentList = {
@@ -24,6 +25,10 @@ bool handleException(QString path) {
     qDebug() << "Hander process path:" << g_crashReporterPath;
     qDebug() << "Crash handler arguments list: " << argumentList;
     QProcess::startDetached(g_crashReporterPath, argumentList);
+
+    if (g_exceptionPostHandledCallback) {
+        g_exceptionPostHandledCallback();
+    }
     return true;
 }
 
@@ -51,8 +56,10 @@ bool minidumpReadyCallback(const char *dump_dir,
 }
 #endif
 
-ExceptionGlobalHandler::ExceptionGlobalHandler(const QString& crashReporterPath) {
+ExceptionGlobalHandler::ExceptionGlobalHandler(const QString& crashReporterPath,
+                                               ExceptionPostHandledCallback postHandledCallback) {
   g_crashReporterPath = crashReporterPath;
+  g_exceptionPostHandledCallback = postHandledCallback;
   initilize();
 }
 
@@ -74,3 +81,4 @@ ExceptionGlobalHandler::~ExceptionGlobalHandler() {
         breakpadHandler = nullptr;
     }
 }
+
