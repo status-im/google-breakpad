@@ -13,7 +13,8 @@ class ExceptionGlobalHandler
 {
 public:
     ExceptionGlobalHandler(const QString& crashReporterPath,
-                           ExceptionPostHandledCallback postHandledCallback = nullptr);
+                           ExceptionPostHandledCallback postHandledCallback = nullptr,
+                           const QString& logsPath = "");
     ~ExceptionGlobalHandler();
 
 private:
