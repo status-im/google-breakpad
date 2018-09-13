@@ -8,6 +8,9 @@
 cmake_minimum_required(VERSION 3.1.0)
 project(libbreakpad)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11")
+
 # external breakpad repo
 set(BREAKPAD_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/breakpad)
 include_directories ("${BREAKPAD_SOURCE_DIR}/src")
