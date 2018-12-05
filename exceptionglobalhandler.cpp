@@ -9,6 +9,8 @@
 #include "client/linux/handler/exception_handler.h"
 #elif defined(Q_OS_MACOS)
 #include "client/mac/handler/exception_handler.h"
+#elif defined(Q_OS_WIN)
+#include "client/windows/handler/exception_handler.h"
 #endif
 
 QString g_crashReporterPath;
@@ -53,6 +55,20 @@ bool minidumpReadyCallback(const char *dump_dir, const char *minidump_id,
 
   return handleException(path);
 }
+#elif defined(Q_OS_WIN)
+bool minidumpReadyCallback(const wchar_t* dump_dir, const wchar_t* minidump_id,
+                           void *context, EXCEPTION_POINTERS* exinfo,
+                           MDRawAssertionInfo* assertion, bool succeeded) {
+  Q_UNUSED(exinfo);
+  Q_UNUSED(assertion);
+
+  if (!succeeded)
+    return false;
+
+  QDir minidumpDir = QDir(QString::fromWCharArray(dump_dir));
+  QString minidumpFileName = minidumpDir.absoluteFilePath(QString::fromWCharArray(minidump_id) + ".dmp");
+  return handleException(minidumpFileName);
+}
 #endif
 
 ExceptionGlobalHandler::ExceptionGlobalHandler(
@@ -73,6 +89,10 @@ void ExceptionGlobalHandler::initilize() {
   breakpadHandler = new google_breakpad::ExceptionHandler(
       QDir::tempPath().toStdString(), nullptr, minidumpReadyCallback, NULL,
       true, NULL);
+#elif defined(Q_OS_WIN)
+  std::wstring pathStr = (const wchar_t*)QDir::tempPath().utf16();
+  breakpadHandler = new google_breakpad::ExceptionHandler(
+        pathStr, nullptr, minidumpReadyCallback, nullptr, true);
 #endif
 }
 
